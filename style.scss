@@ -6,9 +6,94 @@ body{
 #main_container{
     height: 100%;
     width: 100%;
-    background-color: rgb(41, 41, 41);
-    
+    background-color: rgb(0, 0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-#secondary_container{
+#secondary-container{
+    height: 90%;
+    width: 90%;
+    background-color: rgba(50, 50, 50, 0.117);
+    display: flex;
+    backdrop-filter: blur(10px);
+    border: solid silver 2px;
+    border-radius: 20px;
+}
 
+
+
+$container-size: 350px;
+$blur-amount: 26px;
+$contrast-amount: 45;
+
+$color-base: #03535d;
+$color-light1: lighten($color-base, 5%);
+$color-light2: lighten($color-base, 10%);
+$color-light3: lighten($color-base, 15%);
+
+
+.liquid-container {
+  width: $container-size;
+  height: $container-size;
+  position: absolute;
+  filter: blur($blur-amount) contrast($contrast-amount);
+  background: radial-gradient(circle, $color-light3, $color-base);
+  border-radius: 50%;
+}
+
+.blob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  transform-origin: center center;
+}
+
+// Assign each blob a unique color, z-index, and animation
+.blob:nth-child(1) {
+  background: $color-base;
+  z-index: 1;
+  animation: move-and-morph 15s infinite alternate;
+}
+
+.blob:nth-child(2) {
+  background: $color-light1;
+  z-index: 2;
+  animation: move-and-morph 12s infinite alternate -4s; 
+}
+
+.blob:nth-child(3) {
+  background: $color-light2;
+  z-index: 3;
+  animation: move-and-morph 10s infinite alternate -2s;
+}
+
+.blob:nth-child(4) {
+  background: $color-light3;
+  z-index: 4;
+  animation: move-and-morph 13s infinite alternate -6s;
+}
+
+@keyframes move-and-morph {
+  0% {
+    transform: translate(-100px, 100px) scale(1);
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  }
+  25% {
+    transform: translateY(-80px) scale(0.8, 1.2); 
+  }
+  50% {
+    transform: translate(100px, -100px) scale(1.1);
+    border-radius: 60% 40% 30% 70% / 50% 60% 40% 60%;
+  }
+  75% {
+    transform: translateX(-90px) scale(1.2, 0.8); 
+  }
+  100% {
+    transform: translate(100px, 100px) scale(1);
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  }
 }
