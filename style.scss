@@ -1,6 +1,7 @@
 body{
     height: 100vh;
     margin: 0;
+    overflow: hidden;
 }
 
 #main_container{
@@ -21,13 +22,18 @@ body{
     border-radius: 20px;
 }
 
+.desc{
+  padding: 20px;
+  color: white;
+  font-family: JetBrains Mono;
+}
 
 
-$container-size: 350px;
-$blur-amount: 26px;
-$contrast-amount: 45;
+$container-size: 1050px;
+$blur-amount: 30px;
+$contrast-amount:29;
 
-$color-base: #03535d;
+$color-base: #025968f4;
 $color-light1: lighten($color-base, 5%);
 $color-light2: lighten($color-base, 10%);
 $color-light3: lighten($color-base, 15%);
@@ -37,6 +43,7 @@ $color-light3: lighten($color-base, 15%);
   width: $container-size;
   height: $container-size;
   position: absolute;
+  right: 0;
   filter: blur($blur-amount) contrast($contrast-amount);
   background: radial-gradient(circle, $color-light3, $color-base);
   border-radius: 50%;
@@ -46,8 +53,8 @@ $color-light3: lighten($color-base, 15%);
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 150px;
-  height: 150px;
+  width: 550px;
+  height: 550px;
   border-radius: 50%;
   transform-origin: center center;
 }
