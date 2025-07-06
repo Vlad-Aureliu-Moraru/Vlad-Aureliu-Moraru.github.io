@@ -66,7 +66,8 @@ body {
   border-radius: 15px;
   background: #575353;
   background: linear-gradient(var(--grade), rgb(87, 83, 83) 0%, rgb(133, 131, 131) 11%, rgb(135, 135, 135) 23%, rgb(112, 107, 107) 35%, rgb(214, 214, 214) 54%, rgb(163, 163, 163) 65%, rgb(153, 151, 151) 76%, rgb(153, 153, 153) 91%, rgb(110, 106, 106) 100%);
-  transition: --grade 1s ease-in-out, scale 1s ease-in-out;
+  transition: --grade 0.5s ease-in-out, scale 0.5s ease-in-out;
+  box-shadow: inset white 2px 2px 1px, inset rgb(0, 0, 0) -2px -2px 3px;
 }
 
 .project:hover {
@@ -79,6 +80,8 @@ body {
 }
 
 #contact_skills {
+  border-left: silver solid 1px;
+  padding: 10px;
   width: 40%;
 }
 
@@ -117,10 +120,9 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 20%;
-  border-radius: 10px;
-  border-right: solid 1px silver;
-  border-left: solid 1px silver;
+  width: 40%;
+  height: 20%;
+  border-radius: 2px;
 }
 
 #skills svg {
@@ -138,9 +140,20 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-right: solid 1px silver;
-  border-left: solid 1px silver;
   border-radius: 10px;
+}
+
+#skills_frameworks {
+  display: flex;
+}
+
+#frameworks {
+  height: 20%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .liquid-container {
