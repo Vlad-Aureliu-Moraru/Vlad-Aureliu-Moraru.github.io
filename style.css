@@ -117,10 +117,8 @@ body {
   display: flex;
   -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
-  border: solid transparent 2px;
+  border: solid silver 2px;
   padding: 20px;
-  border-image-slice: 1;
-  border-image-source: linear-gradient(295deg, rgb(87, 83, 83) 0%, rgb(133, 131, 131) 11%, rgb(135, 135, 135) 23%, rgb(112, 107, 107) 35%, rgb(214, 214, 214) 54%, rgb(163, 163, 163) 65%, rgb(153, 151, 151) 76%, rgb(153, 153, 153) 91%, rgb(110, 106, 106) 100%);
   border-radius: 20px;
 }
 
@@ -187,16 +185,16 @@ body {
 
 .contactsvg {
   display: flex;
-  height: 48px;
-  width: 48px;
-  background: linear-gradient(295deg, rgb(87, 83, 83) 0%, rgb(133, 131, 131) 11%, rgb(135, 135, 135) 23%, rgb(112, 107, 107) 35%, rgb(214, 214, 214) 54%, rgb(163, 163, 163) 65%, rgb(153, 151, 151) 76%, rgb(153, 153, 153) 91%, rgb(110, 106, 106) 100%);
+  gap: 10px;
 }
 
 .contactsvg svg {
-  width: 100%;
-  height: 100%;
-  -webkit-mask: url(assets/linkedin.svg) no-repeat center;
-  mask: url(assets/linkedin.svg) no-repeat center;
+  fill: silver;
+}
+
+.contactsvg svg:hover {
+  fill: rgb(164, 164, 164);
+  cursor: pointer;
 }
 
 .liquid-container {
