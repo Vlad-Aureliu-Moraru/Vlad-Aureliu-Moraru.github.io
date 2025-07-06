@@ -16,7 +16,7 @@ body {
 #secondary-container {
   height: 90%;
   width: 90%;
-  background-color: rgba(50, 50, 50, 0.117);
+  background-color: rgba(255, 255, 255, 0.117);
   display: flex;
   -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
@@ -38,6 +38,7 @@ body {
   filter: blur(30px) contrast(29);
   background: radial-gradient(circle, rgba(3, 153, 179, 0.9568627451), rgba(2, 89, 104, 0.9568627451));
   border-radius: 50%;
+  overflow: hidden;
 }
 
 .blob {
