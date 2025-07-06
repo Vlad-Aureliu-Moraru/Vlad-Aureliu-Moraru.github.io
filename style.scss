@@ -1,3 +1,6 @@
+$silver:linear-gradient(295deg, rgba(87, 83, 83, 1) 0%, rgba(133, 131, 131, 1) 11%, rgba(135, 135, 135, 1) 23%, rgba(112, 107, 107, 1) 35%, rgba(214, 214, 214, 1) 54%, rgba(163, 163, 163, 1) 65%, rgba(153, 151, 151, 1) 76%, rgba(153, 153, 153, 1) 91%, rgba(110, 106, 106, 1) 100%);
+
+
 body{
     height: 100vh;
     margin: 0;
@@ -86,28 +89,169 @@ body{
   // border: solid rgb(0, 30, 255) 2px;
   width: 40%;
 }
+#contact{
+  display: flex;
+  flex-direction: column;
+}
+
+.contactsvg{
+  display: flex;
+}
+.contactsvg svg{
+  fill: $silver;
+}
+
+
+
+body{
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+#main_container{
+    height: 100%;
+    width: 100%;
+    background-color: rgb(0, 0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#secondary-container{
+    height: 90%;
+    width: 90%;
+    background-color: rgba(67, 67, 67, 0.202);
+    display: flex;
+    backdrop-filter: blur(10px);
+    border: solid transparent 2px;
+    padding: 20px;
+    border-image-slice: 1;      
+    border-image-source: $silver;   
+    border-radius: 20px;
+}
+
+.desc{
+  padding: 20px;
+  color: white;
+  font-family: JetBrains Mono;
+}
+
+#descriere{
+  // border: solid brown 1px;
+  width: 100%;
+  height: 50%;
+  margin: 0;
+}
+#projects{
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  // border: solid brown 1px;
+  width: 100%;
+  height: 50%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#titlu{
+  font-size: 26px;
+  position: absolute;
+  
+}
+
+
+@property --grade {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 295deg;
+}
+.project{
+  --grade:295deg;
+  width: 80%;
+  height: 80%;
+  border-radius: 15px;
+  background: #575353;
+  background: linear-gradient(var(--grade), rgba(87, 83, 83, 1) 0%, rgba(133, 131, 131, 1) 11%, rgba(135, 135, 135, 1) 23%, rgba(112, 107, 107, 1) 35%, rgba(214, 214, 214, 1) 54%, rgba(163, 163, 163, 1) 65%, rgba(153, 151, 151, 1) 76%, rgba(153, 153, 153, 1) 91%, rgba(110, 106, 106, 1) 100%);
+  transition: --grade 1s ease-in-out,scale 1s ease-in-out;
+  
+}
+
+.project:hover{
+    scale: 1.1;
+  --grade:310deg;
+  
+
+}
+
+#desc_proj{
+  // border: solid red 2px;
+  width: 60%;
+}
+
+#contact_skills{
+  // border: solid rgb(0, 30, 255) 2px;
+  width: 40%;
+}
+#contact{
+  display: flex;
+}
+
+.contactsvg{
+  display: flex;
+  height: 48px;
+  width: 48px;
+  background: $silver;
+}
+.contactsvg svg{
+  width: 100%;
+  height: 100%;
+
+  -webkit-mask: url(assets/linkedin.svg) no-repeat center;
+  mask: url(assets/linkedin.svg) no-repeat center;
+  
+}
+
+
+
+
+
+
 
 
 
 
 // animations ---
+// --- CONFIGURATION ---
 $container-size: 1050px;
 $blur-amount: 30px;
-$contrast-amount:29;
+$contrast-amount: 29;
 
-$color-base: #025968f4;
-$color-light1: lighten($color-base, 5%);
-$color-light2: lighten($color-base, 10%);
-$color-light3: lighten($color-base, 15%);
+// A warmer, more "lava-like" color palette
+$color-base: #121717; // Dark, "cool" base
+$color-glow: #464273; // Bright, "hot" glow
+$color-1: #3894e0;
+$color-2: #0e5d9d;
+$color-3: #046181;
+
+// (color, animation, duration, delay, starting-size)
+$blobs: (
+  ($color-1, 'rise-and-fall-1', 20s, -2s, 450px),
+  ($color-2, 'rise-and-fall-2', 18s, -8s, 550px),
+  ($color-3, 'rise-and-fall-1', 25s, -4s, 500px),
+  ($color-glow, 'rise-and-fall-2', 22s, 0s, 400px)
+);
 
 
+// --- STYLES ---
 .liquid-container {
   width: $container-size;
   height: $container-size;
   position: absolute;
   right: 0;
   filter: blur($blur-amount) contrast($contrast-amount);
-  background: radial-gradient(circle, $color-light3, $color-base);
+  // Switched to a linear-gradient to simulate a light source at the bottom
+  background: linear-gradient(to top, $color-glow, $color-base);
   border-radius: 50%;
   overflow: hidden;
 }
@@ -116,53 +260,62 @@ $color-light3: lighten($color-base, 15%);
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 550px;
-  height: 550px;
   border-radius: 50%;
   transform-origin: center center;
+  will-change: transform, border-radius;
+  // Adds an inner glow for a more liquid, 3D look
+  box-shadow: 
+    inset 0 0 15px rgba(255, 255, 255, 0.4),
+    inset 0 0 40px $color-glow;
 }
 
-.blob:nth-child(1) {
-  background: $color-base;
-  z-index: 1;
-  animation: move-and-morph 15s infinite alternate;
-}
+// --- SCALABLE BLOB GENERATOR ---
+@for $i from 1 through length($blobs) {
+  .blob:nth-child(#{$i}) {
+    $blob-props: nth($blobs, $i);
+    $size: nth($blob-props, 5);
 
-.blob:nth-child(2) {
-  background: $color-light1;
-  z-index: 2;
-  animation: move-and-morph 12s infinite alternate -4s; 
-}
-
-.blob:nth-child(3) {
-  background: $color-light2;
-  z-index: 3;
-  animation: move-and-morph 10s infinite alternate -2s;
-}
-
-.blob:nth-child(4) {
-  background: $color-light3;
-  z-index: 4;
-  animation: move-and-morph 13s infinite alternate -6s;
-}
-
-@keyframes move-and-morph {
-  0% {
-    transform: translate(-100px, 100px) scale(1);
-    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    width: $size;
+    height: $size;
+    background: nth($blob-props, 1);
+    animation: 
+      #{nth($blob-props, 2)} 
+      #{nth($blob-props, 3)} 
+      infinite alternate
+      #{nth($blob-props, 4)};
   }
-  25% {
-    transform: translateY(-80px) scale(0.8, 1.2); 
+}
+
+// --- NEW ANIMATIONS ---
+
+@keyframes rise-and-fall-1 {
+  0% {
+    // Start at the bottom, squashed
+    transform: translateY(300px) scale(1, 0.8);
+    border-radius: 70% 30% 40% 60% / 60% 50% 60% 40%;
   }
   50% {
-    transform: translate(100px, -100px) scale(1.1);
-    border-radius: 60% 40% 30% 70% / 50% 60% 40% 60%;
-  }
-  75% {
-    transform: translateX(-90px) scale(1.2, 0.8); 
+    // Rise and stretch, with some horizontal drift
+    transform: translateY(-100px) translateX(50px) scale(0.9, 1.1);
   }
   100% {
-    transform: translate(100px, 100px) scale(1);
+    // End at the top, expanded and rounder
+    transform: translateY(-300px) scale(1.1);
     border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  }
+}
+
+@keyframes rise-and-fall-2 {
+  0% {
+    transform: translateY(350px) scale(0.9, 0.7);
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  }
+  40% {
+    // Add more shape-shifting mid-rise
+    border-radius: 70% 30% 40% 60% / 60% 50% 60% 40%;
+  }
+  100% {
+    transform: translateY(-350px) translateX(-40px) scale(1);
+    border-radius: 60% 40% 30% 70% / 50% 60% 40% 60%;
   }
 }
