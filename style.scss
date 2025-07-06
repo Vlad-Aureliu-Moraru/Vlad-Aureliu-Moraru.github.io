@@ -88,111 +88,13 @@ body{
 #contact{
   display: flex;
   flex-direction: column;
-}
-
-.contactsvg{
-  display: flex;
-}
-.contactsvg svg{
-  fill: $silver;
-}
-
-
-
-body{
-    height: 100vh;
-    margin: 0;
-    overflow: hidden;
-}
-
-#main_container{
-    height: 100%;
-    width: 100%;
-    background-color: rgb(0, 0, 0);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-#secondary-container{
-    height: 90%;
-    width: 90%;
-    background-color: rgba(67, 67, 67, 0.202);
-    display: flex;
-    backdrop-filter: blur(10px);
-    border: solid silver 2px;
-    padding: 20px;
-    border-radius: 20px;
-}
-
-.desc{
-  padding: 20px;
-  color: white;
-  font-family: JetBrains Mono;
-}
-
-#descriere{
-  // border: solid brown 1px;
-  width: 100%;
-  height: 50%;
-  margin: 0;
-}
-#projects{
-  display: flex;
-  box-sizing: border-box;
-  flex-direction: column;
-  // border: solid brown 1px;
-  width: 100%;
-  height: 50%;
-  margin: 0;
-  display: flex;
-  align-items: center;
   justify-content: center;
-}
-#titlu{
-  font-size: 26px;
-  position: absolute;
-  
-}
-
-
-@property --grade {
-  syntax: '<angle>';
-  inherits: false;
-  initial-value: 295deg;
-}
-.project{
-  --grade:295deg;
-  width: 80%;
-  height: 80%;
-  border-radius: 15px;
-  background: #575353;
-  background: linear-gradient(var(--grade), rgba(87, 83, 83, 1) 0%, rgba(133, 131, 131, 1) 11%, rgba(135, 135, 135, 1) 23%, rgba(112, 107, 107, 1) 35%, rgba(214, 214, 214, 1) 54%, rgba(163, 163, 163, 1) 65%, rgba(153, 151, 151, 1) 76%, rgba(153, 153, 153, 1) 91%, rgba(110, 106, 106, 1) 100%);
-  transition: --grade 1s ease-in-out,scale 1s ease-in-out;
-  
-}
-
-.project:hover{
-    scale: 1.1;
-  --grade:310deg;
-  
-
-}
-
-#desc_proj{
-  // border: solid red 2px;
-  width: 60%;
-}
-
-#contact_skills{
-  // border: solid rgb(0, 30, 255) 2px;
-  width: 40%;
-}
-#contact{
-  display: flex;
+  align-items: center;
 }
 
 .contactsvg{
   display: flex;
+  justify-content: center;
   gap: 10px;
 }
 .contactsvg svg{
@@ -203,7 +105,40 @@ body{
   cursor: pointer;
 }
 
-
+#languages{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap:10px;
+  padding: 10px;
+}
+#skills{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  border-radius: 10px;
+  border-right: solid 1px silver;
+  border-left: solid 1px silver;
+}
+#skills svg{
+  fill: silver;
+}
+#general_skills{
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}
+#langu{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-right: solid 1px silver;
+  border-left: solid 1px silver;
+  border-radius: 10px;
+}
 
 
 
