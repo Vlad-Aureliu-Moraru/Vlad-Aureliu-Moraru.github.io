@@ -184,13 +184,18 @@ $blobs: (
   ($color-glow, 'rise-and-fall-2', 22s, 0s, 400px)
 );
 
+#group1{
+  left: 900px;
+}
+#group2{
+  right:100%;
+}
 
 // --- STYLES ---
 .liquid-container {
   width: $container-size;
   height: $container-size;
   position: absolute;
-  right: 0;
   filter: blur($blur-amount) contrast($contrast-amount);
   // Switched to a linear-gradient to simulate a light source at the bottom
   background: linear-gradient(to top, $color-glow, $color-base);
