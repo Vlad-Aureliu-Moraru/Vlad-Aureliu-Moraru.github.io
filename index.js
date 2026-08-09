@@ -1,128 +1,163 @@
 /* ───────────────────────────────────────────────────────────
-   Portfolio Slider — mobile-first, accessible, performant
-   Controls: arrow buttons · keyboard ← → · swipe/drag
+   Portfolio landing page — vanilla JS
+   Progress · nav · scroll-spy · reveals · spotlight · tilt ·
+   typewriter · ticker · image loading
 ─────────────────────────────────────────────────────────── */
 (function () {
   'use strict';
 
-  /* ── DOM refs ─────────────────────────────────────────── */
-  const track     = document.getElementById('slider-track');
-  const wrapper   = document.getElementById('slider-wrapper');
-  const btnPrev   = document.getElementById('prev-btn');
-  const btnNext   = document.getElementById('next-btn');
-  const cntCur    = document.getElementById('counter-current');
-  const cntTot    = document.getElementById('counter-total');
-  const fillBar   = document.getElementById('progress-fill');
-  const cards     = Array.from(document.querySelectorAll('.project-card'));
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const TOTAL      = cards.length;
-  const AUTO_MS    = 5200;
-  const SWIPE_THR  = 48; // px threshold to register a swipe
+  /* ── Scroll progress bar ─────────────────────────────── */
+  const progress = document.getElementById('scroll-progress');
+  const updateProgress = () => {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    progress.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
 
-  let current   = 0;
-  let timer     = null;
+  /* ── Nav: scrolled state + mobile toggle ─────────────── */
+  const nav = document.getElementById('nav');
+  const toggle = document.getElementById('nav-toggle');
+  const navLinks = document.getElementById('nav-links');
 
-  /* ── Initialise ───────────────────────────────────────── */
-  // Write total count
-  cntTot.textContent = pad(TOTAL);
+  const onScroll = () => {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
-  // Attach per-card accent colour to bg element
-  cards.forEach((card) => {
-    const color = card.dataset.color || '#7c3aed';
-    const bg = card.querySelector('.project-card-bg');
-    if (bg) bg.style.background = color;
+  const closeMenu = () => {
+    navLinks.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  };
+  toggle.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
   });
-
-  /* ── Pad helper ───────────────────────────────────────── */
-  function pad(n) {
-    return String(n).padStart(2, '0');
-  }
-
-  /* ── Navigate to slide ────────────────────────────────── */
-  function goTo(index) {
-    current = ((index % TOTAL) + TOTAL) % TOTAL;
-
-    // Slide the track
-    track.style.transform = `translateX(-${current * 100}%)`;
-
-    // Update counter
-    cntCur.textContent = pad(current + 1);
-
-    // Update progress bar width (percentage of total)
-    fillBar.style.width = `${((current + 1) / TOTAL) * 100}%`;
-
-    // Announce to screen readers via aria-live on #counter-wrap
-    // (the live region is on the parent #counter-wrap already)
-  }
-
-  function next() { goTo(current + 1); }
-  function prev() { goTo(current - 1); }
-
-  /* ── Auto-advance ─────────────────────────────────────── */
-  function startAuto() {
-    stopAuto();
-    timer = setInterval(next, AUTO_MS);
-  }
-
-  function stopAuto() {
-    clearInterval(timer);
-    timer = null;
-  }
-
-  startAuto();
-
-  /* ── Pause on hover/focus (desktop) ──────────────────── */
-  wrapper.addEventListener('mouseenter', stopAuto);
-  wrapper.addEventListener('mouseleave', startAuto);
-  wrapper.addEventListener('focusin',   stopAuto);
-  wrapper.addEventListener('focusout',  startAuto);
-
-  /* ── Button clicks ────────────────────────────────────── */
-  btnNext.addEventListener('click', () => { stopAuto(); next(); startAuto(); });
-  btnPrev.addEventListener('click', () => { stopAuto(); prev(); startAuto(); });
-
-  /* ── Keyboard navigation ──────────────────────────────── */
+  navLinks.addEventListener('click', (e) => {
+    if (e.target.closest('a')) closeMenu();
+  });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') { stopAuto(); next(); startAuto(); }
-    if (e.key === 'ArrowLeft')  { stopAuto(); prev(); startAuto(); }
+    if (e.key === 'Escape') closeMenu();
   });
 
-  /* ── Touch / pointer swipe ────────────────────────────── */
-  let pointerStartX = null;
-  let isDragging    = false;
+  /* ── Scroll-spy ──────────────────────────────────────── */
+  const sections = Array.from(document.querySelectorAll('section[id]'));
+  const spyLinks = Array.from(document.querySelectorAll('.nav-link'));
 
-  wrapper.addEventListener('pointerdown', (e) => {
-    // Only handle primary button / touch
-    if (e.pointerType === 'mouse' && e.button !== 0) return;
-    pointerStartX = e.clientX;
-    isDragging    = false;
-    stopAuto();
-    wrapper.setPointerCapture(e.pointerId);
-  }, { passive: true });
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        spyLinks.forEach((l) =>
+          l.classList.toggle('active', l.getAttribute('href') === '#' + entry.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
 
-  wrapper.addEventListener('pointermove', (e) => {
-    if (pointerStartX === null) return;
-    if (Math.abs(e.clientX - pointerStartX) > 8) isDragging = true;
-  }, { passive: true });
+  sections.forEach((s) => spy.observe(s));
 
-  wrapper.addEventListener('pointerup', (e) => {
-    if (pointerStartX === null) return;
-    const dx = e.clientX - pointerStartX;
-    if (Math.abs(dx) >= SWIPE_THR && isDragging) {
-      dx < 0 ? next() : prev();
+  /* ── Reveal on scroll + stagger ──────────────────────── */
+  const revealEls = Array.from(document.querySelectorAll('.reveal'));
+
+  revealEls.forEach((el) => {
+    const group = el.closest('.container, #hero') || el.parentElement;
+    const siblings = group ? Array.from(group.querySelectorAll(':scope > .reveal, :scope .project-row.reveal')) : [el];
+    const idx = siblings.indexOf(el);
+    if (idx >= 0) el.style.transitionDelay = Math.min(idx * 70, 420) + 'ms';
+  });
+
+  if (REDUCED || !('IntersectionObserver' in window)) {
+    revealEls.forEach((el) => el.classList.add('is-visible'));
+  } else {
+    const revealObs = new IntersectionObserver((entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach((el) => revealObs.observe(el));
+  }
+
+  /* ── Cursor spotlight (fine pointer only) ────────────── */
+  const canSpotlight = window.matchMedia('(pointer: fine)').matches && !REDUCED;
+  const body = document.body;
+
+  if (canSpotlight) {
+    body.classList.add('spotlight-on');
+    window.addEventListener('pointermove', (e) => {
+      body.style.setProperty('--mx', e.clientX + 'px');
+      body.style.setProperty('--my', e.clientY + 'px');
+    }, { passive: true });
+  }
+
+  /* ── 3D tilt on project mockups ──────────────────────── */
+  const tiltEls = Array.from(document.querySelectorAll('.tilt'));
+
+  if (canSpotlight) {
+    tiltEls.forEach((el) => {
+      el.addEventListener('pointermove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width;
+        const py = (e.clientY - rect.top) / rect.height;
+        const rx = (0.5 - py) * 10;
+        const ry = (px - 0.5) * 12;
+        el.style.transform = `perspective(900px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+      });
+      el.addEventListener('pointerleave', () => {
+        el.style.transform = '';
+      });
+    });
+  }
+
+  /* ── Typewriter ──────────────────────────────────────── */
+  const typeTarget = document.getElementById('typewriter');
+  const ROLES = ['Java Backend', 'Game Developer', 'AI Tinkerer', 'Clean Architecture'];
+
+  if (typeTarget && !REDUCED) {
+    let roleIdx = 0;
+    let charIdx = 0;
+    let deleting = false;
+
+    const type = () => {
+      const word = ROLES[roleIdx];
+      charIdx = deleting ? charIdx - 1 : charIdx + 1;
+      typeTarget.textContent = word.slice(0, charIdx);
+
+      let delay = deleting ? 34 : 74;
+      if (!deleting && charIdx === word.length) {
+        delay = 1600;
+        deleting = true;
+      } else if (deleting && charIdx === 0) {
+        deleting = false;
+        roleIdx = (roleIdx + 1) % ROLES.length;
+        delay = 420;
+      }
+      setTimeout(type, delay);
+    };
+    type();
+  } else if (typeTarget) {
+    typeTarget.textContent = ROLES[0];
+  }
+
+  /* ── Ticker: duplicate for seamless loop ─────────────── */
+  const tickerTrack = document.querySelector('.ticker-track');
+  if (tickerTrack) tickerTrack.innerHTML += tickerTrack.innerHTML;
+
+  /* ── Mockup images: fade in when loaded ──────────────── */
+  document.querySelectorAll('.mockup-img').forEach((img) => {
+    if (img.complete && img.naturalWidth > 0) {
+      img.classList.add('is-loaded');
+    } else {
+      img.addEventListener('load', () => img.classList.add('is-loaded'));
     }
-    pointerStartX = null;
-    isDragging    = false;
-    startAuto();
-  }, { passive: true });
+  });
 
-  wrapper.addEventListener('pointercancel', () => {
-    pointerStartX = null;
-    isDragging    = false;
-    startAuto();
-  }, { passive: true });
-
-  /* ── Initialise display ───────────────────────────────── */
-  goTo(0);
-
+  /* ── Footer year ─────────────────────────────────────── */
+  const year = document.getElementById('year');
+  if (year) year.textContent = new Date().getFullYear();
 })();
