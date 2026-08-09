@@ -116,7 +116,7 @@
 
   /* ── Typewriter ──────────────────────────────────────── */
   const typeTarget = document.getElementById('typewriter');
-  const ROLES = ['Java Backend', 'Game Developer', 'AI Tinkerer', 'Clean Architecture'];
+  const ROLES = ['Java Backend', 'Game Developer', 'AI Engineer', 'Spring Boot'];
 
   if (typeTarget && !REDUCED) {
     let roleIdx = 0;
@@ -148,13 +148,92 @@
   const tickerTrack = document.querySelector('.ticker-track');
   if (tickerTrack) tickerTrack.innerHTML += tickerTrack.innerHTML;
 
-  /* ── Mockup images: fade in when loaded ──────────────── */
+  /* ── Mockup images: fade in when loaded, hide the placeholder art ── */
+  const revealImage = (img) => {
+    img.classList.add('is-loaded');
+    img.closest('.mockup-screen')?.classList.add('art-loaded');
+  };
   document.querySelectorAll('.mockup-img').forEach((img) => {
     if (img.complete && img.naturalWidth > 0) {
-      img.classList.add('is-loaded');
+      revealImage(img);
     } else {
-      img.addEventListener('load', () => img.classList.add('is-loaded'));
+      img.addEventListener('load', () => revealImage(img));
     }
+  });
+
+  /* ── Project screenshot galleries ─────────────────────── */
+  document.querySelectorAll('.mockup-gallery').forEach((gallery) => {
+    const track = gallery.querySelector('.gallery-track');
+    const slides = Array.from(gallery.querySelectorAll('.gallery-slide'));
+    const dotsWrap = gallery.querySelector('.gallery-dots');
+    const btnPrev = gallery.querySelector('.gallery-prev');
+    const btnNext = gallery.querySelector('.gallery-next');
+    if (!track || slides.length < 2) return;
+
+    const AUTOPLAY_MS = 4000;
+    let current = 0;
+    let timer = null;
+
+    const dots = slides.map((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'gallery-dot';
+      dot.setAttribute('role', 'tab');
+      dot.setAttribute('aria-label', 'Go to screenshot ' + (i + 1));
+      dot.addEventListener('click', () => { stop(); goTo(i); start(); });
+      dotsWrap.appendChild(dot);
+      return dot;
+    });
+
+    function goTo(index) {
+      current = ((index % slides.length) + slides.length) % slides.length;
+      track.style.transform = 'translateX(-' + current * 100 + '%)';
+
+      const img = slides[current].querySelector('.mockup-img');
+      if (img && img.complete && img.naturalWidth > 0) revealImage(img);
+
+      dots.forEach((d, i) => {
+        d.classList.toggle('is-active', i === current);
+        d.setAttribute('aria-selected', String(i === current));
+      });
+    }
+
+    function next() { goTo(current + 1); }
+    function prev() { goTo(current - 1); }
+    function start() {
+      stop();
+      if (!REDUCED) timer = setInterval(next, AUTOPLAY_MS);
+    }
+    function stop() {
+      clearInterval(timer);
+      timer = null;
+    }
+
+    btnNext.addEventListener('click', () => { stop(); next(); start(); });
+    btnPrev.addEventListener('click', () => { stop(); prev(); start(); });
+
+    gallery.addEventListener('pointerenter', stop);
+    gallery.addEventListener('pointerleave', start);
+    gallery.addEventListener('focusin', stop);
+    gallery.addEventListener('focusout', start);
+
+    /* Touch / pen swipe only — desktop uses buttons (avoids clashing with tilt) */
+    let startX = null;
+    gallery.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch' || e.pointerType === 'pen') {
+        startX = e.clientX;
+        stop();
+      }
+    }, { passive: true });
+    gallery.addEventListener('pointerup', (e) => {
+      if (startX === null) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 40) (dx < 0 ? next() : prev());
+      startX = null;
+      start();
+    }, { passive: true });
+
+    goTo(0);
+    start();
   });
 
   /* ── Footer year ─────────────────────────────────────── */
