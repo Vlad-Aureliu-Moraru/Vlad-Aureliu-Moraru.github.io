@@ -753,9 +753,16 @@ body.spotlight-on #spotlight {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--gap-md);
+  align-items: stretch;
 }
 
 .highlight-card {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 16px;
+  align-items: start;
   padding: 24px 26px;
   border-radius: var(--r-md);
   background: var(--bg-pane);
@@ -771,24 +778,29 @@ body.spotlight-on #spotlight {
 .highlight-icon {
   display: grid;
   place-items: center;
+  grid-column: 1;
+  grid-row: 1;
   width: 44px;
   height: 44px;
   border-radius: 12px;
   color: var(--accent);
   background: rgba(251, 191, 36, 0.12);
   border: 1px solid rgba(251, 191, 36, 0.22);
-  margin-bottom: 16px;
 }
 .highlight-icon svg {
   width: 22px;
   height: 22px;
 }
 .highlight-card h3 {
+  grid-column: 2;
+  grid-row: 1;
   font-size: var(--text-md);
   font-weight: 700;
   margin-bottom: 6px;
 }
 .highlight-card p {
+  grid-column: 2;
+  grid-row: 2;
   font-size: var(--text-sm);
   color: var(--text-secondary);
 }
@@ -1508,7 +1520,7 @@ body.spotlight-on #spotlight {
 ═══════════════════════════════════════════════════════════ */
 @media (min-width: 640px) {
   .about-highlights {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .cred-grid {
@@ -1526,10 +1538,6 @@ body.spotlight-on #spotlight {
 
   #hero {
     flex-wrap: nowrap;
-  }
-
-  .about-grid {
-    grid-template-columns: 1fr 1fr;
   }
 
   .skills-grid {
